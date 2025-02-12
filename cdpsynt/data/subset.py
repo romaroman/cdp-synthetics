@@ -368,7 +368,7 @@ class Subset(ABC):
 
 class SubsetTemplateCDP(Subset):
 
-    DIR_TMPL_CDP = DIR_DATA / "cdp/images/d1_ps1_dens0.5_rep1/orig_template"
+    DIR_TMPL_CDP = DIR_DATA / "orig_template"
 
     def __init__(
         self, multishot: bool = False, subtypes: list[str] | None = None
