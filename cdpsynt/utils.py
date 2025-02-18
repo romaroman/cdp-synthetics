@@ -6,7 +6,7 @@ import re
 import cv2 as cv
 import numpy as np
 
-__all__ = ["CustomEnum", "scan_subsets", "str2nmb", "flatten", "img2blocks", "imgray", "minmax", "normalize_img", "cycle_pad_lists", "globre"]
+__all__ = ["CustomEnum", "scan_subsets", "str2nmb", "flatten", "img2blocks", "imgray", "minmax", "normalize_img", "cycle_pad_lists", "globre", "imscale", "imread"]
 
 class CustomEnum(Enum):
     def __str__(self) -> str:
@@ -112,7 +112,6 @@ def __get_blocks_idxs(
 
     return np.where(img_mat == 1)
 
-
 def imgray(img_3c: np.ndarray) -> np.ndarray:
     return cv.cvtColor(img_3c, cv.COLOR_BGR2GRAY) if len(img_3c.shape) == 3 and img_3c.shape[2] == 3 else img_3c
 
@@ -140,3 +139,33 @@ def cycle_pad_lists(list_of_lists: list[Any]) -> Any:
 
 def globre(path: Path, pattern: str) -> list[str]:
     return list(filter(lambda x: re.compile(pattern).match(x.name), path.rglob("*")))
+
+def imscale(
+    img: np.ndarray, scale: float, interpolation: int = cv.INTER_NEAREST
+) -> np.ndarray:
+    if scale == 1:
+        return img
+    img_resized = cv.resize(
+        img,
+        (int(img.shape[1] * scale), int(img.shape[0] * scale)),
+        interpolation=interpolation,
+    )
+    if img_resized.ndim != img.ndim and img_resized.ndim == 2 and img.ndim == 3:
+        img_resized = np.expand_dims(img_resized, axis=-1)
+    return img_resized
+
+def imread(path: Path | str, *args, **kwargs) -> np.ndarray:
+    path = Path(path).resolve()
+    if not path.exists():
+        raise FileNotFoundError(f"File {path} not found")
+
+    if path.suffix.lower() in [".heic", ".heif"]:
+        img_rgb = np.asarray(Image.open(path, **kwargs).convert("RGB"))
+        img = cv.cvtColor(img_rgb, cv.COLOR_RGB2BGR)
+    else:
+        img = cv.imread(str(path), *args)
+
+    if img is None:
+        raise ValueError(f"Failed to read {path}")
+
+    return img

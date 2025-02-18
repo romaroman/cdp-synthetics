@@ -1,6 +1,6 @@
 prefix: experiment
 prefix_session: 1st
-mode: test
+mode: train
 
 io:
   dir_root: /path/to/dataset # Fill in the path of the downloaded dataset 

@@ -358,7 +358,7 @@ class Subset(ABC):
     @staticmethod
     def infodiff(dirs: list[Subset], separator: str = " | ") -> tuple[list[str], str]:
         df = pd.DataFrame.from_records([d.sdict for d in dirs])
-        df["Fake nature"].replace("", np.NaN, inplace=True)
+        df["Fake nature"].replace("", np.nan, inplace=True)
         cols = list(filter(lambda col: df[col].nunique() > 1, df.columns))
         ds = list(map(lambda x: x[1].to_dict(), df[cols].iterrows()))
         labels = [separator.join(map(str, d.values())) for d in ds]
