@@ -402,7 +402,7 @@ subtypes_acquisition: dict[type, str] = {
 
 
 class SubsetAcq(Subset):
-    def __init__(self, path: Path, entity_type: type, multishot: bool) -> SubsetAcq:
+    def __init__(self, path: Path, entity_type: type, multishot: bool) -> None:
         self.subtypes: list[str] = subtypes_acquisition[entity_type]
         super().__init__(path, entity_type, multishot)
 
@@ -494,7 +494,7 @@ class SubsetScanner(SubsetAcq):
 
 
 class SubsetPhoneWIFS(SubsetAcq):
-    def __init__(self, path: Path, entity_type: type, multishot: bool) -> SubsetPhoneWIFS:
+    def __init__(self, path: Path, entity_type: type, multishot: bool) -> None:
         super().__init__(path, entity_type, multishot)
 
     def set_acquisition_params(self, subdir_acquisition: str) -> None:
